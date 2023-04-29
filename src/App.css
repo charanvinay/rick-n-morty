@@ -56,3 +56,11 @@ body {
   margin: 10px 5px !important;
   border-radius: 10px;
 }
+
+.bg-terinary{
+  background-color: var(--bg-terinary);
+  /* width: 100%; */
+  margin: 5px !important;
+  padding: 15px;
+  border-radius: 10px;
+}

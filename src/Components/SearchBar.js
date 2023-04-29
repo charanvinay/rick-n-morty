@@ -44,7 +44,7 @@ const SearchBar = ({ setData }) => {
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search Character"
                 inputProps={{ "aria-label": "search character" }}
-                value={searchText}
+                value={searchText|| ""}
                 onKeyUp={(e) => {
                     setSearchText(e.target.value); // Updating the searchText state whenever the user types in the search bar
                 }}

@@ -1,5 +1,6 @@
 // Importing icons from MUI
 import { MyLocation, SatelliteAlt } from "@mui/icons-material";
+import CloseIcon from "@mui/icons-material/Close";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LanguageIcon from "@mui/icons-material/Language";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -8,18 +9,18 @@ import PublicIcon from "@mui/icons-material/Public";
 // Importing components from MUI
 import {
     Box,
-    Button,
     Card,
     CardContent,
+    Chip,
     CircularProgress,
     Dialog,
-    DialogActions,
     DialogContent,
     DialogTitle,
     Grid,
+    IconButton,
     Slide,
     Stack,
-    Typography,
+    Typography
 } from "@mui/material";
 
 // Importing React and an image file
@@ -45,6 +46,7 @@ const ProfileCard = (props) => {
     const [originData, setOriginData] = useState(null);
     const [locationData, setLocationData] = useState(null);
     const [episodesData, setEpisodesData] = useState(null);
+    const [selectedSeason, setSelectedSeason] = useState("All");
 
     // useEffect hook is used to handle the API calls
     useEffect(() => {
@@ -84,7 +86,14 @@ const ProfileCard = (props) => {
                 let episode_obj = await getIndividualDetails(episode[i]);
                 episode_data.push(episode_obj);
             }
-            setEpisodesData([...episode_data]);
+            console.log(episode_data);
+            const group = episode_data.reduce((acc, curr) => {
+                let [s] = curr.episode.split("E");
+                acc[s] = acc[s] ? [...acc[s], curr] : [curr];
+                return acc;
+            }, {});
+            console.log(group);
+            setEpisodesData({ ...group });
         }
     };
 
@@ -102,55 +111,26 @@ const ProfileCard = (props) => {
 
     // Object to hold type icons
     const typeIcon = {
-        "space station": <SatelliteAlt sx={{fontSize: "16px"}}/>,
-        planet: <PublicIcon sx={{fontSize: "16px"}}/>,
+        "space station": <SatelliteAlt sx={{ fontSize: "16px" }} />,
+        planet: <PublicIcon sx={{ fontSize: "16px" }} />,
     };
 
     const returnLocationItem = (data, title, icon) => {
-        return <>
-            {data && ( // If the character has some data, display it
-                <Grid item sm={12} md={5} className="w-100">
-                    <Stack spacing={1} direction="column" className="bg-light">
-                        <Typography
-                            variant="h6"
-                            sx={{
-                                textTransform: "capitalize",
-                            }}
-                        >
-                            {title}
-                        </Typography>
-                        <Stack spacing={1} direction="row">
-                            {icon}
+        return (
+            <>
+                {data && ( // If the character has some data, display it
+                    <Grid item sm={12} md={5} className="w-100">
+                        <Stack spacing={1} direction="column" className="bg-light">
                             <Typography
-                                variant="subtitle2"
+                                variant="h6"
                                 sx={{
                                     textTransform: "capitalize",
-                                    lineHeight: 1,
-                                    display: "flex",
-                                    alignItems: "center",
                                 }}
                             >
-                                {origin.name}
+                                {title}
                             </Typography>
-                        </Stack>
-                        {data?.dimension && (
-                            <Stack spacing={1} direction="row" alignItems="center">
-                                {typeIcon[data?.type?.toLowerCase()] || (
-                                    <LanguageIcon sx={{fontSize: "16px"}}/>
-                                )}
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        textTransform: "capitalize",
-                                    }}
-                                >
-                                    {data?.dimension}
-                                </Typography>
-                            </Stack>
-                        )}
-                        {data?.residents && (
                             <Stack spacing={1} direction="row">
-                                <GroupsIcon sx={{fontSize: "16px"}}/>
+                                {icon}
                                 <Typography
                                     variant="subtitle2"
                                     sx={{
@@ -160,13 +140,50 @@ const ProfileCard = (props) => {
                                         alignItems: "center",
                                     }}
                                 >
-                                    {data?.residents?.length}
+                                    {origin.name}
                                 </Typography>
                             </Stack>
-                        )}
-                    </Stack>
-                </Grid>
-            )}</>;
+                            {data?.dimension && (
+                                <Stack spacing={1} direction="row" alignItems="center">
+                                    {typeIcon[data?.type?.toLowerCase()] || (
+                                        <LanguageIcon sx={{ fontSize: "16px" }} />
+                                    )}
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            textTransform: "capitalize",
+                                        }}
+                                    >
+                                        {data?.dimension}
+                                    </Typography>
+                                </Stack>
+                            )}
+                            {data?.residents && (
+                                <Stack spacing={1} direction="row">
+                                    <GroupsIcon sx={{ fontSize: "16px" }} />
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            textTransform: "capitalize",
+                                            lineHeight: 1,
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        {data?.residents?.length}
+                                    </Typography>
+                                </Stack>
+                            )}
+                        </Stack>
+                    </Grid>
+                )}
+            </>
+        );
+    };
+
+    const handleClick = (season) => {
+        console.log(season);
+        setSelectedSeason(season);
     };
     return (
         <Box sx={{ position: "relative" }}>
@@ -295,7 +312,28 @@ const ProfileCard = (props) => {
                 aria-describedby="alert-dialog-description" // A string that describes the Dialog content for accessibility purposes
             >
                 {/* The title of the Dialog, taken from the 'name' variable */}
-                <DialogTitle id="alert-dialog-title" sx={{textAlign: "center", color: "#176ede", letterSpacing: 0, fontWeight: "bold"}}>{name}</DialogTitle>
+                <DialogTitle
+                    id="alert-dialog-title"
+                    sx={{
+                        textAlign: "center",
+                        color: "#176ede",
+                        letterSpacing: 0,
+                        fontWeight: "bold",
+                    }}
+                >
+                    {name}
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        sx={{
+                            position: "absolute",
+                            right: 8,
+                            top: 8,
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
                 {/* The content of the Dialog */}
                 <DialogContent dividers={true}>
                     <Stack
@@ -305,7 +343,7 @@ const ProfileCard = (props) => {
                         justifyContent="center"
                     >
                         {/* A grid that contains the character's origin and location */}
-                        <Grid container alignItems="center"> 
+                        <Grid container alignItems="center">
                             <Grid item sm={12} md={2} className="w-100">
                                 {/* A container for the character image and status circle */}
                                 <Box sx={{ height: 100, width: 100, position: "relative" }}>
@@ -320,7 +358,7 @@ const ProfileCard = (props) => {
                                             borderRadius: "50%",
                                         }}
                                         // Hints the browser to load the image lazily for performance optimization
-                                        loading="lazy" 
+                                        loading="lazy"
                                     />
                                     <div
                                         style={{
@@ -339,64 +377,108 @@ const ProfileCard = (props) => {
                                     sx={{
                                         textTransform: "capitalize",
                                         lineHeight: 1,
-                                        marginTop:2,
+                                        marginTop: 2,
                                     }}
                                 >
                                     {/* A string that displays the character's gender and species */}
-                                    {`${gender} ${species}`} 
+                                    {`${gender} ${species}`}
                                 </Typography>
                             </Grid>
                             {/* Origin grid item */}
-                            {returnLocationItem(originData, "Origin", <MyLocation sx={{fontSize: "16px"}}/>)}
+                            {returnLocationItem(
+                                originData,
+                                "Origin",
+                                <MyLocation sx={{ fontSize: "16px" }} />
+                            )}
                             {/* Location grid item */}
-                            {returnLocationItem(locationData, "Location", <LocationOnIcon sx={{fontSize: "16px"}}/>)}
+                            {returnLocationItem(
+                                locationData,
+                                "Location",
+                                <LocationOnIcon sx={{ fontSize: "16px" }} />
+                            )}
                         </Grid>
                         {/* List of episodes if available */}
                         {loading ? (
                             <CircularProgress />
-                        ) : episodesData?.length > 0 ? (
+                        ) : episodesData && Object.keys(episodesData)?.length > 0 ? (
                             <Stack direction="column" spacing={2} className="w-100">
                                 <Typography
                                     variant="h6"
                                     sx={{
                                         textTransform: "capitalize",
+                                        color: "#176ede",
                                         lineHeight: 1,
                                     }}
                                 >
                   Episodes
                                 </Typography>
-                                {episodesData.map((episode) => {
-                                    return (
-                                        <Stack
-                                            spacing={1}
-                                            direction="row"
-                                            justifyContent="start"
-                                            alignItems="start"
-                                            key={episode.id}
-                                        >
-                                            <Typography
-                                                variant="subtitle2"
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                    lineHeight: 1,
-                                                }}
-                                            >
-                                                {episode.episode}
-                                            </Typography>
-                                            <Typography
-                                                variant="subtitle2"
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                    lineHeight: 1,
-                                                }}
-                                            >
-                                                {episode.name}
-                                            </Typography>
-                                        </Stack>
-                                    );
+                                {Object.keys(episodesData).length > 1 && <Stack direction="row" spacing={1} flexWrap='wrap'>
+                                    <Chip label={"All"} onClick={()=>handleClick("All")} variant={selectedSeason == "All" ? "filled" : "outlined"} color="primary" sx={{marginBottom: "5px"}}/>
+                                    {Object.keys(episodesData).length > 0 && Object.keys(episodesData)?.map((season) => {
+                                        return <Chip key={season} label={season} onClick={()=>handleClick(season)} variant={selectedSeason == season ? "filled" : "outlined"} color="primary" sx={{marginBottom: "5px"}}/>;
+                                    })}
+                                </Stack>}
+                                {Object.keys(episodesData).length > 0 && Object.keys(episodesData)?.map((season) => {
+                                    if(selectedSeason == season || selectedSeason=="All"){
+                                        return (
+                                            <Stack key={season}>
+                                                {selectedSeason != season && <Typography
+                                                    variant="h6"
+                                                    sx={{
+                                                        textTransform: "capitalize",
+                                                        textAlign: "center",
+                                                        lineHeight: 1.4,
+                                                    }}
+                                                >
+                                                    Season {season.slice(1)}
+                                                </Typography>}
+                                                <Grid container alignItems="center">
+                                                    {episodesData[season].length > 0 && episodesData[season]?.map((episode) => {
+                                                        return (
+                                                            <Grid
+                                                                item
+                                                                sm={12}
+                                                                md={6}
+                                                                className="w-100"
+                                                                key={episode.id}
+                                                            >
+                                                                <Stack
+                                                                    spacing={1}
+                                                                    direction="row"
+                                                                    justifyContent="start"
+                                                                    alignItems="start"
+                                                                    className="bg-terinary"
+                                                                >
+                                                                    <Typography
+                                                                        variant="subtitle2"
+                                                                        sx={{
+                                                                            textTransform: "capitalize",
+                                                                            lineHeight: 1,
+                                                                        }}
+                                                                    >
+                                                                        E{episode.episode.split("E")[1]}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        variant="subtitle2"
+                                                                        sx={{
+                                                                            textTransform: "capitalize",
+                                                                            lineHeight: 1,
+                                                                        }}
+                                                                    >
+                                                                        {episode.name}
+                                                                    </Typography>
+                                                                </Stack>
+                                                            </Grid>
+                                                        );
+                                                    })}
+                                                </Grid>
+                                            </Stack>
+                                        );
+                                    }
                                 })}
                             </Stack>
-                        ) : ( // if no episodes found
+                        ) : (
+                        // if no episodes found
                             <Typography
                                 variant="body2"
                                 sx={{ textAlign: "center", color: grey[400] }}
@@ -406,12 +488,6 @@ const ProfileCard = (props) => {
                         )}
                     </Stack>
                 </DialogContent>
-                {/* Button to close the dialog */}
-                <DialogActions sx={{ padding: 2 }}>
-                    <Button variant="outlined" color="primary" onClick={handleClose}>
-            Close
-                    </Button>
-                </DialogActions>
             </Dialog>
         </Box>
     );
