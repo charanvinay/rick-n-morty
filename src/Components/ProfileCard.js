@@ -453,6 +453,7 @@ const ProfileCard = (props) => {
                                                                         variant="subtitle2"
                                                                         sx={{
                                                                             textTransform: "capitalize",
+                                                                            fontWeight: "bold",
                                                                             lineHeight: 1,
                                                                         }}
                                                                     >
