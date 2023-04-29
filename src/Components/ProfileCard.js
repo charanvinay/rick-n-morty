@@ -102,8 +102,71 @@ const ProfileCard = (props) => {
 
     // Object to hold type icons
     const typeIcon = {
-        "space station": <SatelliteAlt />,
-        planet: <PublicIcon />,
+        "space station": <SatelliteAlt sx={{fontSize: "16px"}}/>,
+        planet: <PublicIcon sx={{fontSize: "16px"}}/>,
+    };
+
+    const returnLocationItem = (data, title, icon) => {
+        return <>
+            {data && ( // If the character's origin has a data, display it
+                <Grid item sm={12} md={5} className="w-100">
+                    <Stack spacing={1} direction="column" className="bg-light">
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                textTransform: "capitalize",
+                            }}
+                        >
+                            {title}
+                        </Typography>
+                        <Stack spacing={1} direction="row">
+                            {icon}
+                            <Typography
+                                variant="subtitle2"
+                                sx={{
+                                    textTransform: "capitalize",
+                                    lineHeight: 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
+                            >
+                                {origin.name}
+                            </Typography>
+                        </Stack>
+                        {data?.dimension && (
+                            <Stack spacing={1} direction="row" alignItems="center">
+                                {typeIcon[data?.type?.toLowerCase()] || (
+                                    <LanguageIcon sx={{fontSize: "16px"}}/>
+                                )}
+                                <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                        textTransform: "capitalize",
+                                    }}
+                                >
+                                    {data?.dimension}
+                                </Typography>
+                            </Stack>
+                        )}
+                        {data?.residents && (
+                            <Stack spacing={1} direction="row">
+                                <GroupsIcon sx={{fontSize: "16px"}}/>
+                                <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                        textTransform: "capitalize",
+                                        lineHeight: 1,
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    {data?.residents?.length}
+                                </Typography>
+                            </Stack>
+                        )}
+                    </Stack>
+                </Grid>
+            )}</>;
     };
     return (
         <Box sx={{ position: "relative" }}>
@@ -232,7 +295,7 @@ const ProfileCard = (props) => {
                 aria-describedby="alert-dialog-description" // A string that describes the Dialog content for accessibility purposes
             >
                 {/* The title of the Dialog, taken from the 'name' variable */}
-                <DialogTitle id="alert-dialog-title">{name}</DialogTitle>
+                <DialogTitle id="alert-dialog-title" sx={{textAlign: "center", color: "#176ede", letterSpacing: 0, fontWeight: "bold"}}>{name}</DialogTitle>
                 {/* The content of the Dialog */}
                 <DialogContent dividers={true}>
                     <Stack
@@ -241,185 +304,50 @@ const ProfileCard = (props) => {
                         alignItems="center"
                         justifyContent="center"
                     >
-                        {/* A container for the character image and status circle */}
-                        <Box sx={{ height: 100, width: 100, position: "relative" }}>
-                            <img
-                                src={image}
-                                alt={name}
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    overflow: "hidden",
-                                    objectFit: "cover",
-                                    borderRadius: "50%",
-                                }}
-                                // Hints the browser to load the image lazily for performance optimization
-                                loading="lazy" 
-                            />
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    bottom: "-2px",
-                                    left: 20,
-                                    width: "15px",
-                                    height: "15px",
-                                    backgroundColor: statusColor[status] || "#ccc", // The color of the status circle, based on the character's status
-                                    borderRadius: "50%",
-                                }}
-                            ></div>
-                        </Box>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{
-                                textTransform: "capitalize",
-                                letterSpacing: 0.5,
-                                lineHeight: 1,
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "5px",
-                            }}
-                        >
-                            {/* A string that displays the character's gender and species */}
-                            {`${gender} ${species}`} 
-                        </Typography>
                         {/* A grid that contains the character's origin and location */}
-                        <Grid container> 
-                            {originData && ( // If the character's origin has a data, display it
-                                <Grid item sm={12} md={6} className="w-100">
-                                    <Stack spacing={1} direction="column" className="bg-light">
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                textTransform: "capitalize",
-                                            }}
-                                        >
-                      Origin
-                                        </Typography>
-                                        <Stack spacing={1} direction="row">
-                                            <MyLocation />
-                                            <Typography
-                                                variant="subtitle2"
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                    letterSpacing: 0.5,
-                                                    lineHeight: 1,
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "5px",
-                                                }}
-                                            >
-                                                {origin.name}
-                                            </Typography>
-                                        </Stack>
-                                        {originData?.dimension && (
-                                            <Stack spacing={1} direction="row">
-                                                {typeIcon[originData?.type?.toLowerCase()] || (
-                                                    <LanguageIcon />
-                                                )}
-                                                <Typography
-                                                    variant="subtitle2"
-                                                    sx={{
-                                                        textTransform: "capitalize",
-                                                        letterSpacing: 0.5,
-                                                        lineHeight: 1,
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px",
-                                                    }}
-                                                >
-                                                    {originData?.dimension}
-                                                </Typography>
-                                            </Stack>
-                                        )}
-                                        {originData?.residents && (
-                                            <Stack spacing={1} direction="row">
-                                                <GroupsIcon />
-                                                <Typography
-                                                    variant="subtitle2"
-                                                    sx={{
-                                                        textTransform: "capitalize",
-                                                        letterSpacing: 0.5,
-                                                        lineHeight: 1,
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px",
-                                                    }}
-                                                >
-                                                    {originData?.residents?.length}
-                                                </Typography>
-                                            </Stack>
-                                        )}
-                                    </Stack>
-                                </Grid>
-                            )}
-                            {locationData && ( // If the character's location has a data, display it
-                                <Grid item sm={12} md={6} className="w-100">
-                                    <Stack spacing={1} direction="column" className="bg-light">
-                                        <Typography
-                                            variant="h6"
-                                            sx={{
-                                                textTransform: "capitalize",
-                                            }}
-                                        >
-                      Location
-                                        </Typography>
-                                        <Stack spacing={1} direction="row">
-                                            <LocationOnIcon />
-                                            <Typography
-                                                variant="subtitle2"
-                                                sx={{
-                                                    textTransform: "capitalize",
-                                                    letterSpacing: 0.5,
-                                                    lineHeight: 1,
-                                                    display: "flex",
-                                                    alignItems: "center",
-                                                    gap: "5px",
-                                                }}
-                                            >
-                                                {location.name}
-                                            </Typography>
-                                        </Stack>
-                                        {locationData?.dimension && (
-                                            <Stack spacing={1} direction="row">
-                                                {typeIcon[locationData?.type?.toLowerCase()] || (
-                                                    <LanguageIcon />
-                                                )}
-                                                <Typography
-                                                    variant="subtitle2"
-                                                    sx={{
-                                                        textTransform: "capitalize",
-                                                        letterSpacing: 0.5,
-                                                        lineHeight: 1,
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px",
-                                                    }}
-                                                >
-                                                    {locationData?.dimension}
-                                                </Typography>
-                                            </Stack>
-                                        )}
-                                        {locationData?.residents && (
-                                            <Stack spacing={1} direction="row">
-                                                <GroupsIcon />
-                                                <Typography
-                                                    variant="subtitle2"
-                                                    sx={{
-                                                        textTransform: "capitalize",
-                                                        letterSpacing: 0.5,
-                                                        lineHeight: 1,
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        gap: "5px",
-                                                    }}
-                                                >
-                                                    {locationData?.residents?.length}
-                                                </Typography>
-                                            </Stack>
-                                        )}
-                                    </Stack>
-                                </Grid>
-                            )}
+                        <Grid container alignItems="center"> 
+                            <Grid item sm={12} md={2} className="w-100">
+                                {/* A container for the character image and status circle */}
+                                <Box sx={{ height: 100, width: 100, position: "relative" }}>
+                                    <img
+                                        src={image}
+                                        alt={name}
+                                        style={{
+                                            width: "100%",
+                                            height: "100%",
+                                            overflow: "hidden",
+                                            objectFit: "cover",
+                                            borderRadius: "50%",
+                                        }}
+                                        // Hints the browser to load the image lazily for performance optimization
+                                        loading="lazy" 
+                                    />
+                                    <div
+                                        style={{
+                                            position: "absolute",
+                                            bottom: "5px",
+                                            right: 10,
+                                            width: "15px",
+                                            height: "15px",
+                                            backgroundColor: statusColor[status] || "#ccc", // The color of the status circle, based on the character's status
+                                            borderRadius: "50%",
+                                        }}
+                                    ></div>
+                                </Box>
+                                <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                        textTransform: "capitalize",
+                                        lineHeight: 1,
+                                        marginTop:2,
+                                    }}
+                                >
+                                    {/* A string that displays the character's gender and species */}
+                                    {`${gender} ${species}`} 
+                                </Typography>
+                            </Grid>
+                            {returnLocationItem(originData, "Origin", <MyLocation sx={{fontSize: "16px"}}/>)}
+                            {returnLocationItem(locationData, "Location", <LocationOnIcon sx={{fontSize: "16px"}}/>)}
                         </Grid>
                         {/* List of episodes if available */}
                         {loading ? (
@@ -430,7 +358,6 @@ const ProfileCard = (props) => {
                                     variant="h6"
                                     sx={{
                                         textTransform: "capitalize",
-                                        letterSpacing: 0.5,
                                         lineHeight: 1,
                                     }}
                                 >
@@ -449,7 +376,6 @@ const ProfileCard = (props) => {
                                                 variant="subtitle2"
                                                 sx={{
                                                     textTransform: "capitalize",
-                                                    letterSpacing: 0.5,
                                                     lineHeight: 1,
                                                 }}
                                             >
@@ -459,8 +385,7 @@ const ProfileCard = (props) => {
                                                 variant="subtitle2"
                                                 sx={{
                                                     textTransform: "capitalize",
-                                                    letterSpacing: 0.5,
-                                                    lineHeight: 1.2,
+                                                    lineHeight: 1,
                                                 }}
                                             >
                                                 {episode.name}
