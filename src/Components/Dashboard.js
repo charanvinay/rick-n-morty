@@ -106,7 +106,7 @@ const Dashboard = () => {
                         })}
                     </Grid>
                     {/* Pagination */}
-                    <Stack
+                    {resInfo?.pages !=1 && <Stack
                         justifyContent="center"
                         alignItems="center"
                         sx={{ marginTop: 4 }}
@@ -119,7 +119,7 @@ const Dashboard = () => {
                             page={page}
                             onChange={handleChange}
                         />
-                    </Stack>
+                    </Stack>}
                 </Box>
             ) : ( // if no characters found
                 <Box
