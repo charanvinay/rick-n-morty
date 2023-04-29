@@ -108,7 +108,7 @@ const ProfileCard = (props) => {
 
     const returnLocationItem = (data, title, icon) => {
         return <>
-            {data && ( // If the character's origin has a data, display it
+            {data && ( // If the character has some data, display it
                 <Grid item sm={12} md={5} className="w-100">
                     <Stack spacing={1} direction="column" className="bg-light">
                         <Typography
@@ -346,7 +346,9 @@ const ProfileCard = (props) => {
                                     {`${gender} ${species}`} 
                                 </Typography>
                             </Grid>
+                            {/* Origin grid item */}
                             {returnLocationItem(originData, "Origin", <MyLocation sx={{fontSize: "16px"}}/>)}
+                            {/* Location grid item */}
                             {returnLocationItem(locationData, "Location", <LocationOnIcon sx={{fontSize: "16px"}}/>)}
                         </Grid>
                         {/* List of episodes if available */}
