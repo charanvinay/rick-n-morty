@@ -3,21 +3,21 @@ import SearchIcon from "@mui/icons-material/Search"; // Importing SearchIcon com
 import { IconButton, InputBase, Paper } from "@mui/material"; // Importing IconButton, InputBase, and Paper components from MUI
 import React, { useEffect, useState } from "react"; // Importing React, useEffect, and useState hooks
 
-const SearchBar = ({ getCharacters }) => {
-    // Declaring SearchBar functional component with a props object destructured to getCharacters function
+const SearchBar = ({ setData }) => {
+    // Declaring SearchBar functional component with a props object destructured to setData function
     const [searchText, setSearchText] = useState(null); // Using useState hook to create searchText state and setSearchText state setter
 
     useEffect(() => {
     // Using useEffect hook to debounce API calls while the user types in the search bar
         let debounceTimer; // Defining a debounce timer variable
         if (searchText === "") {
-            // If the search bar is empty, make the API call with an empty search string
-            getCharacters(searchText);
+            // If the search bar is empty, send back an empty search string with page number 1
+            setData({text: searchText, page: 1});
         } else if (searchText != null) {
             // If the search bar is not empty, debounce the API call by waiting 400ms after the user stops typing
             debounceTimer = setTimeout(() => {
                 console.log(searchText); // Logging the search string to the console
-                getCharacters(searchText);
+                setData({text: searchText, page: 1});
             }, 400);
         }
         return () => clearTimeout(debounceTimer); // Clearing the debounce timer when the component unmounts or the search string changes

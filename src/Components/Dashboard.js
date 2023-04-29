@@ -20,24 +20,23 @@ const Dashboard = () => {
     const [resInfo, setResInfo] = useState(null); // info about the fetched data
     const [loading, setLoading] = useState(true); // loading state
     const [characters, setCharacters] = useState([]); // array of characters
-    const [showPagination, setShowPagination] = useState(true); // boolean to determine whether to show pagination or not
+    const [searchText, setSearchText] = useState(null); // boolean to determine whether to show pagination or not
     const [noDataText, setNoDataText] = useState("No Characters found"); // displays the no data text
 
     // Fetching characters data on component mount and when page number changes
     useEffect(() => {
         getCharacters();
-    }, [page]);
+    }, [page, searchText]);
 
     // Function to fetch characters data using the Rick and Morty API
-    const getCharacters = async (searchText) => {
+    const getCharacters = async () => {
     // Resetting state variables
         setCharacters([]);
         setLoading(true);
-        setShowPagination(!searchText);
         try {
             let url = `https://rickandmortyapi.com/api/character/?page=${page}`;
             if (searchText) {
-                url = `https://rickandmortyapi.com/api/character/?name=${searchText}`;
+                url = `https://rickandmortyapi.com/api/character/?page=${page}&name=${searchText}`;
             }
             // Fetching data from API
             const res = await fetch(url);
@@ -82,7 +81,10 @@ const Dashboard = () => {
                Rick N Morty
             </Typography>
             {/* Search bar component */}
-            <SearchBar getCharacters={getCharacters} />
+            <SearchBar setData={(e)=>{
+                setSearchText(e.text);
+                setPage(e["page"] || page);
+            }} />
             {/* Loading state */}
             {loading ? (
                 <Grid container spacing={3} sx={{ marginY: 4 }}>
@@ -104,22 +106,20 @@ const Dashboard = () => {
                         })}
                     </Grid>
                     {/* Pagination */}
-                    {showPagination && (
-                        <Stack
-                            justifyContent="center"
-                            alignItems="center"
-                            sx={{ marginTop: 4 }}
-                        >
-                            <Pagination
-                                count={resInfo?.pages}
-                                variant="outlined"
-                                shape="rounded"
-                                color="primary"
-                                page={page}
-                                onChange={handleChange}
-                            />
-                        </Stack>
-                    )}
+                    <Stack
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ marginTop: 4 }}
+                    >
+                        <Pagination
+                            count={resInfo?.pages}
+                            variant="outlined"
+                            shape="rounded"
+                            color="primary"
+                            page={page}
+                            onChange={handleChange}
+                        />
+                    </Stack>
                 </Box>
             ) : ( // if no characters found
                 <Box
