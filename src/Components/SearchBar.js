@@ -25,7 +25,6 @@ const SearchBar = ({ getCharacters }) => {
 
     return (
         <Paper
-            component="form"
             elevation={0}
             sx={{
                 p: "2px 4px",
