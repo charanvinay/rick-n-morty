@@ -1,12 +1,19 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "node": true,
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "overrides": [
     ],
     "parserOptions": {
@@ -17,6 +24,7 @@
         "react"
     ],
     "rules": {
+        "react/prop-types": "off",
         "indent": [
             "error",
             4
