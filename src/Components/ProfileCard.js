@@ -343,8 +343,8 @@ const ProfileCard = (props) => {
                         justifyContent="center"
                     >
                         {/* A grid that contains the character's origin and location */}
-                        <Grid container alignItems="center">
-                            <Grid item sm={12} md={2} className="w-100">
+                        <Grid container alignItems="center" justifyContent="center">
+                            <Grid item sm={12} md={2} className="w-100" sx={{display: "flex", alignItems:"center", justifyContent: "center", flexDirection: "column"}}>
                                 {/* A container for the character image and status circle */}
                                 <Box sx={{ height: 100, width: 100, position: "relative" }}>
                                     <img
